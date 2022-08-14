@@ -1,8 +1,6 @@
 import pygame, sys
 from pygame.locals import *
 from pygame import mixer
-import time
-import random
 
 mixer.init()
 
@@ -27,6 +25,7 @@ def collisions_testing(player_rect, obj_list, greenhouse_effect):
         if player_rect.colliderect(obj_list[i][0]):
             del obj_list[i]
             greenhouse_effect -= 5
+            collect.set_volume(0.3)
             collect.play()
 
     return greenhouse_effect
@@ -84,7 +83,7 @@ def showVictoryScreen():
     win_sound.play()
 
     pygame.display.update()
-    pygame.time.wait(3000)
+    pygame.time.wait(5000)
 
 def showGameOverScreen():
     gameOverFont = pygame.font.Font('freesansbold.ttf', 150)
@@ -101,7 +100,7 @@ def showGameOverScreen():
     death_sound.play()
 
     pygame.display.update()
-    pygame.time.wait(3000)
+    pygame.time.wait(5000)
     
 
 
@@ -135,11 +134,12 @@ grass_img = pygame.transform.scale(grass_img, (10,10))
 dirt_img = pygame.image.load("images/dirt.png")
 dirt_img = pygame.transform.scale(dirt_img, (10,10))
 
+player_flip = False
+
 global death_sound, win_sound, collect
 death_sound = pygame.mixer.Sound("gameover.wav")
 win_sound = pygame.mixer.Sound("victory.wav")
 collect = pygame.mixer.Sound("score.wav")
-collect.play()
 
 game_map = [[0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,50,0,0,0,0,0,0,0,0,0,0,40,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -147,7 +147,7 @@ game_map = [[0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
             [0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,20,0,0,40,0,0,0,0,0,0,20,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,1,1,1,0,0,0,0],
             [0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,2,1,1,1,1,1,1,1,1,2,2,2,2],
             [60,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,0,0,0,0,0,0,0,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [2,2,0,0,0,0,0,0,30,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,2,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0],
+            [2,2,0,0,0,0,0,0,30,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,2,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,0,0,0,0,2,2,1,1,2,2,0,0,40,0,0,0,2,2,2,1,2,2,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,20,0,1,1,1,1,1,0,0,0,0,0,0,2,1,1,1,1,1,1,0,0,0,0,0,2,2,2,0,2,2,2,2,2,2,2,2,2,2,1,1,0,0,0,0],
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,0,2,2,2,2,1,1,1,1,1,1,1,0,60,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
@@ -208,11 +208,10 @@ pygame.time.set_timer(timer, 3000)
 win = False
 game_over = False
 
-pygame.mixer.music.load("game_bg.wav")
-pygame.mixer.music.play(-1)
-
 def start_screen():
     run = True
+    pygame.mixer.music.load("home_screen_bg.mp3")
+    pygame.mixer.music.play(-1)
     while run:
 
         clock.tick(60)
@@ -227,31 +226,40 @@ def start_screen():
         screen.fill("black")
         intro_1 = "You are a Climate Warrior who has to collect as many"
         intro_2 = "items in order to bring down the Greenhouse Effect to zero."
-        intro_3 = "The greenhouse effect is ever-increasing due to incessant land pollution by humans."
+        intro_3 = "The greenhouse effect is ever-increasing due to"
+        intro_4 = "incessant land pollution by humans."
 
     
-        titleFont = pygame.font.Font("freesansbold.ttf",60)
-        title = titleFont.render("CLIMATE WARRIOR", True, "white")
+        titleFont = pygame.font.Font("freesansbold.ttf",80)
+        title = titleFont.render("CLIMATE", True, "white")
+        title1 = titleFont.render("WARRIOR", True, "white")
         title_rect = title.get_rect()
-        title_rect.center = (700/2, 370 / 2 - 90)
+        title_rect1 = title1.get_rect()
+        title_rect.center = (700/2, 370 / 2 - 100)
+        title_rect1.center = (700/2, 370 / 2 - 25)
 
         titleFont = pygame.font.Font("freesansbold.ttf",17)
         titleSurf1 = titleFont.render(intro_1, True, "yellow")
         titleSurf2 = titleFont.render(intro_2, True, "yellow")
         titleSurf3 = titleFont.render(intro_3, True, "yellow")
-        controls = titleFont.render("W : Jump \n A : Run Left \n D: Run Right", True, "yellow")
+        titleSurf4 = titleFont.render(intro_4, True, "yellow")
+        controls = titleFont.render("W/Space-bar : Jump \n A : Run Left \n D: Run Right", True, "yellow")
         Rect1 = titleSurf1.get_rect()
         Rect2 = titleSurf2.get_rect()
         Rect3 = titleSurf3.get_rect()
+        Rect4 = titleSurf4.get_rect()
         control_rect = controls.get_rect()
-        Rect1.center = (700 / 2, 370 / 2 +10)
-        Rect2.center = (700 / 2, 370 / 2 +30)
-        Rect3.center = (700 / 2, 370 / 2 + 50)
-        control_rect.center = (700 / 2, 370 / 2 + 80)
+        Rect1.center = (700 / 2, 370 / 2 +40)
+        Rect2.center = (700 / 2, 370 / 2 +60)
+        Rect3.center = (700 / 2, 370 / 2 + 80)
+        Rect4.center = (700 / 2, 370 / 2 + 100)
+        control_rect.center = (700 / 2, 370 / 2 + 140)
         screen.blit(title, title_rect)
+        screen.blit(title1, title_rect1)
         screen.blit(titleSurf1, Rect1)
         screen.blit(titleSurf2, Rect2)
         screen.blit(titleSurf3, Rect3)
+        screen.blit(titleSurf4, Rect4)
         screen.blit(controls, control_rect)
 
         titleFont = pygame.font.Font("freesansbold.ttf", 20)
@@ -261,9 +269,14 @@ def start_screen():
         screen.blit(titleSurf4,Rect4)
         
         pygame.display.update()
+    
+    pygame.mixer.music.fadeout(200)
         
 
 start_screen()
+
+pygame.mixer.music.load("game_bg.wav")
+pygame.mixer.music.play(-1)
 
 while run:
     if greenhouse_effect <= 0:
@@ -357,8 +370,10 @@ while run:
     player_movement = [0,0]
     if moving_right == True:
         player_movement[0] += 2
+        player_flip = False
     if moving_left == True:
         player_movement[0] -= 2
+        player_flip = True
     player_movement[1] += player_gravity
     player_gravity += 0.2
     if player_gravity > 3:
@@ -374,7 +389,14 @@ while run:
     else:
         air_timer += 1
     
-    display.blit(player_img, (player_rect.x - true_scroll[0], player_rect.y - true_scroll[1]))
+    if moving_left == False and moving_right == False:
+        player_img = pygame.image.load('images/idle_player.png')
+        player_img = pygame.transform.scale(player_img, (9, 18))
+        player_rect = pygame.Rect(player_rect.x, player_rect.y, player_img.get_width(), player_img.get_height())
+        display.blit(pygame.transform.flip(player_img, player_flip, False), (player_rect.x - true_scroll[0], player_rect.y - true_scroll[1]))
+    else:
+        display.blit(pygame.transform.flip(player_img, player_flip, False), (player_rect.x - true_scroll[0], player_rect.y - true_scroll[1]))
+    
     
     for event in pygame.event.get(): # event loop
         if event.type == QUIT:
@@ -389,7 +411,7 @@ while run:
             if event.key == K_a:
                 moving_left = True
                 animation_type = "run"
-            if event.key == K_w:
+            if event.key == K_w or event.key == K_SPACE:
                 if air_timer < 6:
                     player_gravity = -5
         if event.type == KEYUP:
