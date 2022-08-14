@@ -27,6 +27,7 @@ def collisions_testing(player_rect, obj_list, greenhouse_effect):
         if player_rect.colliderect(obj_list[i][0]):
             del obj_list[i]
             greenhouse_effect -= 5
+            collect.play()
 
     return greenhouse_effect
 
@@ -134,9 +135,11 @@ grass_img = pygame.transform.scale(grass_img, (10,10))
 dirt_img = pygame.image.load("images/dirt.png")
 dirt_img = pygame.transform.scale(dirt_img, (10,10))
 
-global death_sound, win_sound
+global death_sound, win_sound, collect
 death_sound = pygame.mixer.Sound("gameover.wav")
 win_sound = pygame.mixer.Sound("victory.wav")
+collect = pygame.mixer.Sound("score.wav")
+collect.play()
 
 game_map = [[0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,50,0,0,0,0,0,0,0,0,0,0,40,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
