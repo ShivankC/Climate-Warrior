@@ -294,7 +294,7 @@ while run:
         pygame.quit()
 
     frame_number += 1
-    if frame_number == 11:
+    if frame_number == 5:
         animated_num += 1
         player_img = pygame.image.load('images/RUN_' + str(animated_num) + '.png')
         if animated_num == 2 or animated_num == 5:
