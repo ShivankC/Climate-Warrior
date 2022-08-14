@@ -1,7 +1,10 @@
 import pygame, sys
 from pygame.locals import *
+from pygame import mixer
 import time
 import random
+
+mixer.init()
 
 pygame.init()
 
@@ -77,6 +80,8 @@ def showVictoryScreen():
     screen.blit(gameSurf, gameRect)
     screen.blit(overSurf, overRect)
 
+    win_sound.play()
+
     pygame.display.update()
     pygame.time.wait(3000)
 
@@ -91,6 +96,8 @@ def showGameOverScreen():
 
     screen.blit(gameSurf, gameRect)
     screen.blit(overSurf, overRect)
+
+    death_sound.play()
 
     pygame.display.update()
     pygame.time.wait(3000)
@@ -126,6 +133,10 @@ grass_img = pygame.transform.scale(grass_img, (10,10))
 
 dirt_img = pygame.image.load("images/dirt.png")
 dirt_img = pygame.transform.scale(dirt_img, (10,10))
+
+global death_sound, win_sound
+death_sound = pygame.mixer.Sound("gameover.wav")
+win_sound = pygame.mixer.Sound("victory.wav")
 
 game_map = [[0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,50,0,0,0,0,0,0,0,0,0,0,40,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -194,12 +205,15 @@ pygame.time.set_timer(timer, 3000)
 win = False
 game_over = False
 
+pygame.mixer.music.load("game_bg.wav")
+pygame.mixer.music.play(-1)
+
 def start_screen():
     run = True
     while run:
 
         clock.tick(60)
-
+        
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -255,9 +269,11 @@ while run:
         game_over = True
     
     if game_over == True:
+        pygame.mixer.music.fadeout(500)
         showGameOverScreen()
         pygame.quit()
     if win == True:
+        pygame.mixer.music.fadeout(500)
         showVictoryScreen()
         pygame.quit()
 
