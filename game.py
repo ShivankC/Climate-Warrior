@@ -222,6 +222,11 @@ def start_screen():
                     run = False
             if event.type ==QUIT:
                 run = False
+            if event.type == MOUSEBUTTONUP:
+                x, y = pygame.mouse.get_pos()
+                if x >= 250 and x <= 450:
+                    if y >= (370 / 2 + 120 - 75/2) and y <= (370 / 2 + 120 + 75/2):
+                        run = False
 
         screen.fill("black")
         intro_1 = "You are a Climate Warrior who has to collect as many"
@@ -235,38 +240,54 @@ def start_screen():
         title1 = titleFont.render("WARRIOR", True, "white")
         title_rect = title.get_rect()
         title_rect1 = title1.get_rect()
-        title_rect.center = (700/2, 370 / 2 - 100)
-        title_rect1.center = (700/2, 370 / 2 - 25)
+        title_rect.center = (700/2, 370 / 2 - 120)
+        title_rect1.center = (700/2, 370 / 2 - 45)
+
+        titleFont = pygame.font.Font("freesansbold.ttf", 40)
+        play = titleFont.render("PLAY", True, "white")
 
         titleFont = pygame.font.Font("freesansbold.ttf",17)
         titleSurf1 = titleFont.render(intro_1, True, "yellow")
         titleSurf2 = titleFont.render(intro_2, True, "yellow")
         titleSurf3 = titleFont.render(intro_3, True, "yellow")
         titleSurf4 = titleFont.render(intro_4, True, "yellow")
-        controls = titleFont.render("W/Space-bar : Jump \n A : Run Left \n D: Run Right", True, "yellow")
+        
+        controls1 = titleFont.render("W/Space-bar to Jump", True, "green")
+        controls2 = titleFont.render("A to Run Left", True, "green")
+        controls3 = titleFont.render("D to Run Right", True, "green")
         Rect1 = titleSurf1.get_rect()
         Rect2 = titleSurf2.get_rect()
         Rect3 = titleSurf3.get_rect()
         Rect4 = titleSurf4.get_rect()
-        control_rect = controls.get_rect()
-        Rect1.center = (700 / 2, 370 / 2 +40)
-        Rect2.center = (700 / 2, 370 / 2 +60)
-        Rect3.center = (700 / 2, 370 / 2 + 80)
-        Rect4.center = (700 / 2, 370 / 2 + 100)
-        control_rect.center = (700 / 2, 370 / 2 + 140)
+        play_rect = play.get_rect()
+        
+        control_rect1 = controls1.get_rect()
+        control_rect2 = controls2.get_rect()
+        control_rect3 = controls3.get_rect()
+        Rect1.center = (700 / 2, 370 / 2 +20)
+        Rect2.center = (700 / 2, 370 / 2 +40)
+        Rect3.center = (700 / 2, 370 / 2 + 60)
+        Rect4.center = (700 / 2, 370 / 2 + 80)
+        play_rect.center = (700 / 2, 370 / 2 +135)
+        button = pygame.Rect(700 / 2, 370 / 2 + 120, 200, 75)
+        button.center = (700 / 2, 370 / 2 + 135)
+        button2 = pygame.Rect(700 / 2, 370 / 2 + 120, 175, 50)
+        button2.center = (700 / 2, 370 / 2 + 135)
+        control_rect1.topleft = (10, 370 / 2 + 100)
+        control_rect2.topleft = (10, 370 / 2 + 120)
+        control_rect3.topleft = (10, 370 / 2 + 140)
         screen.blit(title, title_rect)
         screen.blit(title1, title_rect1)
         screen.blit(titleSurf1, Rect1)
         screen.blit(titleSurf2, Rect2)
         screen.blit(titleSurf3, Rect3)
         screen.blit(titleSurf4, Rect4)
-        screen.blit(controls, control_rect)
-
-        titleFont = pygame.font.Font("freesansbold.ttf", 20)
-        titleSurf4 = titleFont.render("Press enter to play...", True, "purple")
-        Rect4 = titleSurf4.get_rect()
-        Rect4.center = (600, 360)
-        screen.blit(titleSurf4,Rect4)
+        screen.blit(controls1, control_rect1)
+        screen.blit(controls2, control_rect2)
+        screen.blit(controls3, control_rect3)
+        pygame.draw.rect(screen, (20, 61, 89), button)
+        pygame.draw.rect(screen, (255, 186, 68), button2)
+        screen.blit(play, play_rect)
         
         pygame.display.update()
     
