@@ -106,6 +106,7 @@ def showGameOverScreen():
 
 WINDOW_SIZE = [700, 370]
 
+global clock
 clock = pygame.time.Clock()
 
 air_timer = 0
@@ -212,6 +213,8 @@ def start_screen():
     run = True
     pygame.mixer.music.load("home_screen_bg.mp3")
     pygame.mixer.music.play(-1)
+    show_controls = False
+    count = 0
     while run:
 
         clock.tick(60)
@@ -227,6 +230,14 @@ def start_screen():
                 if x >= 250 and x <= 450:
                     if y >= (370 / 2 + 120 - 75/2) and y <= (370 / 2 + 120 + 75/2):
                         run = False
+                if x >= 0 and x <= 150:
+                    if y >= 50 and y <= 125:
+                        if count == 1:
+                            count = 0
+                            show_controls = False
+                        elif count == 0:
+                            count = 1
+                            show_controls = True
 
         screen.fill("black")
         intro_1 = "You are a Climate Warrior who has to collect as many"
@@ -245,6 +256,8 @@ def start_screen():
 
         titleFont = pygame.font.Font("freesansbold.ttf", 40)
         play = titleFont.render("PLAY", True, "white")
+        titleFont = pygame.font.Font("freesansbold.ttf", 25)
+        c = titleFont.render("Controls", True, "white")
 
         titleFont = pygame.font.Font("freesansbold.ttf",17)
         titleSurf1 = titleFont.render(intro_1, True, "yellow")
@@ -260,6 +273,7 @@ def start_screen():
         Rect3 = titleSurf3.get_rect()
         Rect4 = titleSurf4.get_rect()
         play_rect = play.get_rect()
+        c_rect = c.get_rect()
         
         control_rect1 = controls1.get_rect()
         control_rect2 = controls2.get_rect()
@@ -269,10 +283,18 @@ def start_screen():
         Rect3.center = (700 / 2, 370 / 2 + 60)
         Rect4.center = (700 / 2, 370 / 2 + 80)
         play_rect.center = (700 / 2, 370 / 2 +135)
+
         button = pygame.Rect(700 / 2, 370 / 2 + 120, 200, 75)
         button.center = (700 / 2, 370 / 2 + 135)
         button2 = pygame.Rect(700 / 2, 370 / 2 + 120, 175, 50)
         button2.center = (700 / 2, 370 / 2 + 135)
+
+        button3 = pygame.Rect(700 / 2, 370 / 2 + 120, 150, 75)
+        button3.center = (75, 50)
+        button4 = pygame.Rect(700 / 2, 370 / 2 + 120, 125, 50)
+        button4.center = (75, 50)
+        c_rect.center = (75, 50)
+
         control_rect1.topleft = (10, 370 / 2 + 100)
         control_rect2.topleft = (10, 370 / 2 + 120)
         control_rect3.topleft = (10, 370 / 2 + 140)
@@ -282,14 +304,23 @@ def start_screen():
         screen.blit(titleSurf2, Rect2)
         screen.blit(titleSurf3, Rect3)
         screen.blit(titleSurf4, Rect4)
-        screen.blit(controls1, control_rect1)
-        screen.blit(controls2, control_rect2)
-        screen.blit(controls3, control_rect3)
+
+        if show_controls == True:
+            screen.blit(controls1, control_rect1)
+            screen.blit(controls2, control_rect2)
+            screen.blit(controls3, control_rect3)
+
         pygame.draw.rect(screen, (20, 61, 89), button)
         pygame.draw.rect(screen, (255, 186, 68), button2)
         screen.blit(play, play_rect)
+
+        pygame.draw.rect(screen, (20, 61, 89), button3)
+        pygame.draw.rect(screen, (255, 186, 68), button4)
+        screen.blit(c, c_rect)
         
         pygame.display.update()
+    
+    clock.tick(60)
     
     pygame.mixer.music.fadeout(200)
         
@@ -424,7 +455,7 @@ while run:
             pygame.quit()
             sys.exit()
         if event.type == timer:
-            greenhouse_effect += 2
+            greenhouse_effect += 4
         if event.type == KEYDOWN:
             if event.key == K_d:
                 moving_right = True
